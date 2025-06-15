@@ -30,15 +30,3 @@ jobs:
         with:
           name: coverage-lcov
           path: coverage/lcov.info
-
-      - name: Generate coverage badge
-        uses: tj-actions/coverage-badge@v2
-        with:
-          coverage-file: coverage/lcov.info
-
-      - name: Commit badge to repo (optional)
-        if: github.ref == 'refs/heads/main'
-        uses: EndBug/add-and-commit@v9
-        with:
-          message: "docs: update coverage badge"
-          add: "coverage.svg"
