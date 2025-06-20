@@ -1,5 +1,22 @@
 import 'package:flutter/material.dart';
 import '../../../models/result_row.dart';
+import 'dart:convert';
+import 'package:hive/hive.dart';
+
+import '../../../models/building.dart';
+
+import 'dart:typed_data';
+
+import 'package:printing/printing.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
+
+
+import '../../../services/pdf_service.dart';
+import '../../../services/excel_service.dart';
+
+
 
 class ResultPage extends StatelessWidget {
   final List<ResultRow> results;
@@ -51,29 +68,39 @@ class ResultPage extends StatelessWidget {
     );
   }
 
-  Widget _footer(BuildContext context) {
+
+Widget _footer(BuildContext context) {
     return Container(
       color: Colors.blueGrey.shade50,
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      padding: const EdgeInsets.symmetric(vertical: 8,horizontal:16),
       child: Row(
-        children: [
-          Text('Σύνολο πολυκατοικίας: ', style: Theme.of(context).textTheme.titleMedium),
+        children:[
+          Text('Σύνολο πολυκατοικίας: ',
+              style: Theme.of(context).textTheme.titleMedium),
           const Spacer(),
-          Text('${_totalBuilding.toStringAsFixed(2)} €', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
-          const SizedBox(width: 16),
+          Text('${_totalBuilding.toStringAsFixed(2)} €',
+              style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight:FontWeight.bold)),
+          const SizedBox(width:16),
           FilledButton.icon(
             icon: const Icon(Icons.picture_as_pdf_outlined),
             label: const Text('Export PDF'),
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Export PDF: coming soon')));
+            onPressed: () async {
+              final bytes = await generatePdfWithResults(results);
+              await Printing.sharePdf(bytes: bytes, filename: 'koinoxrista.pdf');
             },
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width:8),
           FilledButton.tonalIcon(
             icon: const Icon(Icons.table_view_outlined),
             label: const Text('Export Excel'),
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Export Excel: coming soon')));
+            onPressed: () async {
+              final Uint8List xlsx = ExcelService().buildXlsx(results);
+
+              final dir = await getTemporaryDirectory();
+              final file = File('${dir.path}/koinoxrista.xlsx');
+              await file.writeAsBytes(xlsx, flush: true);
+
+              await Share.shareXFiles([XFile(file.path)], text: 'Πίνακας κοινοχρήστων');
             },
           ),
         ],
@@ -81,3 +108,6 @@ class ResultPage extends StatelessWidget {
     );
   }
 }
+
+
+

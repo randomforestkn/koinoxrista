@@ -1,10 +1,25 @@
-// lib/models/apartment.dart
+import 'package:hive/hive.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'apartment.g.dart';
+
+@HiveType(typeId: 0)
+@JsonSerializable()
 class Apartment {
-  final int id; // unique identifier 1..N
-  final double area; // m²
-  final int floor; // 0 = ισόγειο, 1 = Α', ...
-  final bool elevatorExcluded; // true αν εξαιρείται από ανελκυστήρα
-  final double? customMill; // custom χιλιοστά (0..1) optional
+  @HiveField(0)
+  final int id;
+
+  @HiveField(1)
+  final double area;
+
+  @HiveField(2)
+  final int floor;
+
+  @HiveField(3)
+  final bool elevatorExcluded;
+
+  @HiveField(4)
+  final double? customMill;
 
   const Apartment({
     required this.id,
@@ -13,12 +28,8 @@ class Apartment {
     this.elevatorExcluded = false,
     this.customMill,
   });
+
+  factory Apartment.fromJson(Map<String, dynamic> json) =>
+      _$ApartmentFromJson(json);
+  Map<String, dynamic> toJson() => _$ApartmentToJson(this);
 }
-
-
-
-
-
-
-
-
