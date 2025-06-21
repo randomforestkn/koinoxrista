@@ -22,13 +22,14 @@ class ApartmentAdapter extends TypeAdapter<Apartment> {
       floor: fields[2] as int,
       elevatorExcluded: fields[3] as bool,
       customMill: fields[4] as double?,
+      name: fields[5] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, Apartment obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -38,7 +39,9 @@ class ApartmentAdapter extends TypeAdapter<Apartment> {
       ..writeByte(3)
       ..write(obj.elevatorExcluded)
       ..writeByte(4)
-      ..write(obj.customMill);
+      ..write(obj.customMill)
+      ..writeByte(5)
+      ..write(obj.name);
   }
 
   @override
@@ -62,6 +65,7 @@ Apartment _$ApartmentFromJson(Map<String, dynamic> json) => Apartment(
       floor: (json['floor'] as num).toInt(),
       elevatorExcluded: json['elevatorExcluded'] as bool? ?? false,
       customMill: (json['customMill'] as num?)?.toDouble(),
+      name: json['name'] as String?,
     );
 
 Map<String, dynamic> _$ApartmentToJson(Apartment instance) => <String, dynamic>{
@@ -70,4 +74,5 @@ Map<String, dynamic> _$ApartmentToJson(Apartment instance) => <String, dynamic>{
       'floor': instance.floor,
       'elevatorExcluded': instance.elevatorExcluded,
       'customMill': instance.customMill,
+      'name': instance.name,
     };

@@ -7,15 +7,14 @@ class ExcelService {
     final excel = Excel.createExcel();
     final sheet = excel['Κατανομή'];
 
-    sheet.appendRow(
-      ['#','m²','‰','Πάγια','Έκτακτα','Ανελκ.','Θέρμ.','Σύνολο'],
-    );
+    sheet.appendRow(['#','Ονοματεπώνυμο','m²','‰','Πάγια','Έκτακτα','Ανελκ.','Θέρμ.','Σύνολο']);
 
     for (final r in rows) {
       sheet.appendRow([
         r.apartment.id,
+        r.apartment.name ?? '',
         r.apartment.area,
-        (r.mills*1000),
+        r.mills * 1000,
         r.shareFixed,
         r.shareExtra,
         r.shareElevator,
@@ -32,8 +31,9 @@ class ExcelService {
       '',
       '',
       '',
+      '',
       'Σύνολο',
-      rows.fold<double>(0,(s,r)=>s+r.total)
+      rows.fold<double>(0, (s, r) => s + r.total)
     ]);
 
     return Uint8List.fromList(excel.encode()!);

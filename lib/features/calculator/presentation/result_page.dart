@@ -42,7 +42,7 @@ class ResultPage extends StatelessWidget {
       scrollDirection: Axis.horizontal,
       child: DataTable(
         columns: const [
-          DataColumn(label: Text('#')),
+          DataColumn(label: Text('Όνομα/Διαμ.')),
           DataColumn(label: Text('m²')),
           DataColumn(label: Text('‰')),
           DataColumn(label: Text('Πάγια')),
@@ -54,7 +54,9 @@ class ResultPage extends StatelessWidget {
         rows: [
           for (final r in results)
             DataRow(cells: [
-              DataCell(Text(r.apartment.id.toString())),
+              DataCell(Text(r.apartment.name?.isNotEmpty == true
+                  ? r.apartment.name!
+                  : 'Δ${r.apartment.id}')),
               DataCell(Text(r.apartment.area.toStringAsFixed(0))),
               DataCell(Text((r.mills * 1000).toStringAsFixed(1))),
               DataCell(Text(r.shareFixed.toStringAsFixed(2))),
@@ -76,10 +78,10 @@ Widget _footer(BuildContext context) {
       child: Row(
         children:[
           Text('Σύνολο πολυκατοικίας: ',
-              style: Theme.of(context).textTheme.titleMedium),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.black87)),
           const Spacer(),
           Text('${_totalBuilding.toStringAsFixed(2)} €',
-              style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight:FontWeight.bold)),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.black87)),
           const SizedBox(width:16),
           FilledButton.icon(
             icon: const Icon(Icons.picture_as_pdf_outlined),

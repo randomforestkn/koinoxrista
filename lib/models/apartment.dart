@@ -21,12 +21,16 @@ class Apartment {
   @HiveField(4)
   final double? customMill;
 
+  @HiveField(5)            // ➕ όνομα-επώνυμο
+  final String? name;
+
   const Apartment({
     required this.id,
     required this.area,
     required this.floor,
     this.elevatorExcluded = false,
     this.customMill,
+    this.name,
   });
 
   factory Apartment.fromJson(Map<String, dynamic> json) =>
